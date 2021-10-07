@@ -34,10 +34,7 @@ const App = () => (
       </Layout>
       <div className="footer">
         <Typography.Title level={5} style={{ color: 'white', textAlign: 'center' }}>Copyright © 2021
-          <Link to="/">
-            Cryptoverse Inc.
-          </Link> <br />
-          All Rights Reserved.
+           Made with love by <a href="https://github.com/UnkleTayo">Unkletayo</a>
         </Typography.Title>
         <Space>
           <Link to="/">Home</Link>
