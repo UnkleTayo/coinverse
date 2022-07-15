@@ -4,6 +4,8 @@ const cryptoApiHeaders = {
   'x-access-token': process.env.REACT_APP_COIN_RANK_API_KEY,
 };
 
+console.log(cryptoApiHeaders)
+
 const createRequest = (url) => ({ url, headers: cryptoApiHeaders });
 
 export const cryptoApi = createApi({
