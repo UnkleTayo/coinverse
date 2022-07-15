@@ -24,7 +24,9 @@ type: string;
 url:string
 }
 
-const Cryptocurrencies = ({ simplified }:{simplified: boolean}):JSX.Element => {
+
+
+const Cryptocurrencies = ({ simplified }:{simplified?: boolean}):JSX.Element => {
   const count = simplified ? 10 : 100;
   const { data: cryptosList, isFetching } = useGetCryptosQuery(count);
   const [cryptos, setCryptos] = useState<Crypto[]>();
