@@ -5,7 +5,11 @@ import { Col, Row, Typography } from 'antd';
 
 const { Title } = Typography;
 
-const LineChart = ({ coinHistory, currentPrice, coinName }) => {
+const LineChart = ({ coinHistory, currentPrice, coinName }:{
+  coinHistory: any,
+  currentPrice: number,
+  coinName: string
+}): JSX.Element => {
   const coinPrice = [];
   const coinTimestamp = [];
 
@@ -30,7 +34,7 @@ const LineChart = ({ coinHistory, currentPrice, coinName }) => {
     ],
   };
 
-  const options = {
+  const options:any = {
     scales: {
       yAxes: [
         {
