@@ -10,7 +10,7 @@ import Loader from './Loader';
 
 const { Title } = Typography;
 
-const Homepage = () => {
+const Homepage = ():React.ReactNode => {
   const { data, isFetching } = useGetCryptosQuery(10);
   const globalStats = data?.data?.stats;
 

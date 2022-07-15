@@ -8,23 +8,46 @@ import { MoneyCollectOutlined, DollarCircleOutlined, FundOutlined, ExclamationCi
 import { useGetCryptoDetailsQuery, useGetCryptoHistoryQuery } from '../services/cryptoApi';
 import Loader from './Loader';
 import LineChart from './LineChart';
+import { Crypto } from './Cryptocurrencies';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
 
-const CryptoDetails = () => {
-  const { coinId } = useParams();
-  const [timePeriod, setTimePeriod] = useState('7d');
+const CryptoDetails = ():JSX.Element => {
+  const { coinId }:{coinId:string} = useParams();
+  const [timePeriod, setTimePeriod] = useState<string>('7d');
   const { data, isFetching } = useGetCryptoDetailsQuery(coinId);
   const { data: coinHistory } = useGetCryptoHistoryQuery({ coinId, timePeriod });
-  const cryptoDetails = data?.data?.coin;
+  type Supply = {
+    total: number,
+    circulating: number,
+    confirmed: boolean,
+  }
+  type CryptoDetailsDTO = Crypto & {
+    numberOfMarkets: number,
+    numberOfExchanges: number,
+    description: string,
+    links:Crypto[],
+    supply: Supply,
+    allTimeHigh: {
+      price: number,
+    },
+  }
+  const cryptoDetails:CryptoDetailsDTO = data?.data?.coin;
+
+
+  type statType= {
+    title: string;
+    value: number | string | React.ReactElement;
+    icon: React.ReactElement;
+  }
 
 
   if (isFetching) return <Loader />;
 
-  const time = ['1h', '3h', '12h', '24h', '30d', '3m', '1y', '3y', '5y'];
+  const time:string[] = ['1h', '3h', '12h', '24h', '30d', '3m', '1y', '3y', '5y'];
 
-  const stats = [
+  const stats:statType[] = [
     { title: 'Price to USD', value: `$ ${cryptoDetails.price && millify(cryptoDetails.price)}`, icon: <DollarCircleOutlined /> },
     { title: 'Rank', value: cryptoDetails.rank, icon: <NumberOutlined /> },
     { title: '24h Volume', value: `$ ${cryptoDetails['24hVolume'] && millify(cryptoDetails['24hVolume'])}`, icon: <ThunderboltOutlined /> },
@@ -32,7 +55,7 @@ const CryptoDetails = () => {
     { title: 'All-time-high(daily avg.)', value: `$ ${millify(cryptoDetails.allTimeHigh.price)}`, icon: <TrophyOutlined /> },
   ];
 
-  const genericStats = [
+  const genericStats:statType[] = [
     { title: 'Number Of Markets', value: cryptoDetails.numberOfMarkets, icon: <FundOutlined /> },
     { title: 'Number Of Exchanges', value: cryptoDetails.numberOfExchanges, icon: <MoneyCollectOutlined /> },
     { title: 'Aprroved Supply', value: cryptoDetails.supply.confirmed ? <CheckOutlined /> : <StopOutlined />, icon: <ExclamationCircleOutlined /> },
@@ -48,10 +71,10 @@ const CryptoDetails = () => {
         </Title>
         <p>{cryptoDetails.name} live price in US Dollar (USD). View value statistics, market cap and supply.</p>
       </Col>
-      <Select defaultValue="24h" className="select-timeperiod" placeholder="Select Time Period" onSelect={(value) => setTimePeriod(value)}>
+      <Select defaultValue="24h" className="select-timeperiod" placeholder="Select Time Period" onSelect={(value:string) => setTimePeriod(value)}>
         {time.map((date) => <Option key={date}>{date}</Option>)}
       </Select>
-      <LineChart coinHistory={coinHistory} currentPrice={millify(cryptoDetails.price)} coinName={cryptoDetails.name} />
+      <LineChart coinHistory={coinHistory} currentPrice={Number(millify(cryptoDetails.price))} coinName={cryptoDetails.name} />
       <Col className="stats-container">
         <Col className="coin-value-statistics">
           <Col className="coin-value-statistics-heading">
@@ -91,7 +114,7 @@ const CryptoDetails = () => {
         </Row>
         <Col className="coin-links">
           <Title level={3} className="coin-details-heading">{cryptoDetails.name} Links</Title>
-          {cryptoDetails.links?.map((link) => (
+          {cryptoDetails.links?.map((link:Crypto) => (
             <Row key={link.name} className="coin-link">
               <Title level={5} className="link-name">{link.type}</Title>
               <a href={link.url} target="_blank" rel="noreferrer">{link.name}</a>
